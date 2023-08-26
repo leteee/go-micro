@@ -5,5 +5,16 @@ option go_package = "./userService";
 message userinfo{
   string username = 1;
   int32 age = 2;
-  repeated string hobby = 3;
+  PhoneType type = 3;
+  repeated string hobby = 4;
 }
+
+// enum为关键字，定义枚举类型
+enum PhoneType{
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
+
+
+// 编译命令：protoc --go_out=. userinfo.proto
