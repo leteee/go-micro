@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 )
 
 // Goods 创建远程调用的函数，函数一般是放在接口体中
@@ -49,6 +50,6 @@ func main() {
 			fmt.Println("Accept() err:", err)
 		}
 		//绑定服务
-		go rpc.ServeConn(conn)
+		go rpc.ServeCodec(jsonrpc.NewServerCodec(conn))
 	}
 }

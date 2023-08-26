@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 )
 
 type AddGoodsReq struct {
@@ -21,16 +23,17 @@ func main() {
 	//1.用rpc.Dial和rpc建立连接
 	//nc -l 169.254.42.250 8000
 	//conn, err := rpc.Dial("tcp", "169.254.42.250:8000")
-	conn, err := rpc.Dial("tcp", "127.0.0.1:8000")
+	conn, err := net.Dial("tcp", "169.254.42.250:8000")
 	if err != nil {
 		fmt.Println(err)
 	}
 	//关闭连接
 	defer conn.Close()
 
+	client := rpc.NewClientWithCodec(jsonrpc.NewClientCodec(conn))
 	//调用函数
 	reply := &AddGoodsRes{}
-	err = conn.Call("goods.AddGoods", AddGoodsReq{
+	err = client.Call("goods.AddGoods", AddGoodsReq{
 		Id:      1,
 		Title:   "追忆似水年华",
 		Price:   20,
