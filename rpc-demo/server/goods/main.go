@@ -22,7 +22,7 @@ type AddGoodsRes struct {
 }
 
 func (g Goods) AddGoods(req AddGoodsReq, res *AddGoodsRes) error {
-	fmt.Println(req)
+	fmt.Printf("%#v\n", req)
 	res = &AddGoodsRes{
 		Success: true,
 		Message: "数据增加成功",
