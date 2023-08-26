@@ -19,6 +19,8 @@ type AddGoodsRes struct {
 
 func main() {
 	//1.用rpc.Dial和rpc建立连接
+	//nc -l 169.254.42.250 8000
+	//conn, err := rpc.Dial("tcp", "169.254.42.250:8000")
 	conn, err := rpc.Dial("tcp", "127.0.0.1:8000")
 	if err != nil {
 		fmt.Println(err)
