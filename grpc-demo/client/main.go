@@ -1,24 +1,29 @@
 package main
 
 import (
-	"client/proto/greet"
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	pb "grpc-demo/greeter/greeter"
+	"log"
+	"time"
 )
 
 func main() {
-	grpcClient, err := grpc.Dial("127.0.0.1:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", "127.0.0.1", 8000), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("did not connect: %v", err)
 	}
-	//注册客户端
-	client := greet.NewGreetClient(grpcClient)
+	defer conn.Close()
+	c := pb.NewGreeterClient(conn)
 
-	res, err := client.SayHello(context.Background(), &greet.HelloReq{
-		Name: "李华",
-	})
-
-	fmt.Println("%#v", res)
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "李华"})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("Greeting: %s", r.GetMessage())
 }
